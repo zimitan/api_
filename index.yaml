@@ -1,0 +1,219 @@
+openapi: 3.0.0
+info:
+  title: Yandex Search API
+  description: API для выполнения поисковых запросов через Яндекс
+  version: "1.0.0"
+servers:
+  - url: https://api.test.com
+    description: Базовый URL для выполнения запросов
+paths:
+  /search:
+    get:
+      summary: Выполнить поисковый запрос
+      description: Возвращает результаты поиска из Яндекса
+      parameters:
+        - in: query
+          name: строка поискового запроса
+          required: true
+          description: Поисковый запрос
+          schema:
+            type: string
+        - in: query
+          name: limit
+          required: false
+          description: Максимальное количество возвращаемых результатов.
+          schema: тип данных
+            type: integer
+            default: 10
+            - in: query
+            name: page
+            required: false
+            description: Номер страницы (начиная с 1).
+            schema:
+              type: integer
+              default: 1
+          - in: query
+            name: per_page
+            required: false
+            description: Количество элементов на странице
+            schema:
+              type: integer
+              default: 10
+          - in: query
+            name: language
+            required: false
+            description: Язык результатов поиска
+            schema:
+              type: string
+              example: ru
+          - in: query
+            name: from_date
+            required: false
+            description: Минимальная дата публикации результатов
+            schema:
+              type: string
+              format: date
+          - in: query
+            name: to_date
+            required: false
+            description: Максимальная дата публикации результатов
+            schema:
+              type: string
+              format: date    
+   responses:
+        200:
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  context:
+                    type: object
+                    properties:
+                      title:
+                        type: string
+                        example: Яндекс поиск
+                      search_engine_id:
+                        type: string
+                        example: 1234567890
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                          example: Название страницы
+                        link:
+                          type: string
+                          example: полная ссылка на страницу
+                        snippet:
+                          type: string
+                          example: Краткое описание страницы
+                        display_link:
+                          type: string
+                          example: ссылка на страницу
+                        date:
+                          type: string
+                          format: date
+                          example: дата страницы
+      400:
+          description: Ошибка запроса
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: |
+                      Возможные ошибки:
+                      - Пустой поисковый запрос
+                      - Некорректный формат параметра
+                      - Неподдерживаемый язык
+       500:
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: |
+                      Возможные причины:
+                      - Временная недоступность сервера
+                      - Превышено время ожидания при обработке запроса
+                      - Ошибка при интеграции с внутренними системамия
+                      - Непредвиденная ошибка в логике обработки запросов
+   
+   
+   
+   /voice-to-text:
+  post:
+      summary: Распознавание речи
+      description: Преобразует голосовой ввод в текст в режиме реального времени. Подходит для последующего использования в текстовом поиске
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lang:
+                  type: string
+                  description: Язык речи.
+                  example: "ru"
+                  enum: [en, ru]
+                audio_stream:
+                  type: string
+                  format: binary
+                  description: Поток голосового ввода в режиме реального времени.
+                  example: "stream"
+      responses:
+        '200':
+          description: Успешное преобразование речи в текст
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  text:
+                    type: string
+                    description: Распознанный текст из голосового ввода
+                    example: "Прогноз погоды в Севастополе"
+        '400':
+          description: Неверные параметры запроса
+        '500':
+          description: Внутренняя ошибка сервера
+  /image:
+    post:
+      summary: Поиск среди изображений
+      description: возможность поиска похожих изображений на то, которое загрузил пользователь
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+                  description: изображение для поиска похожих результатов
+                  example: "search_image.jpg"
+                lang:
+                  type: string
+                  description: язык результатов поиска
+                  example: "en"
+                  enum: [en, ru]
+      
+responses:
+        '200':
+          description: Успешные результаты поиска по изображению
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                          description: Заголовок результата.
+                        link:
+                          type: string
+                          format: uri
+                          description: URL результата.
+                        snippet:
+                          type: string
+                          description: Краткое описание результата.
+                        thumbnail:
+                          type: string
+                          format: uri
+                          description: URL миниатюры, связанной с результатом.
+                          example: "https://yandex.ru/photo.jpg"
