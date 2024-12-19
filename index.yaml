@@ -22,7 +22,7 @@ paths:
           name: limit
           required: false
           description: Максимальное количество возвращаемых результатов.
-          schema: тип данных
+          schema: 
             type: integer
             default: 10
         - in: query
