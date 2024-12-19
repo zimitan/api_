@@ -60,54 +60,54 @@ paths:
           schema:
             type: string
             format: date    
-   responses:
+    responses:
         200:
           description: Успешный ответ
           content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  context:
-                    type: object
-                    properties:
-                      title:
-                        type: string
-                        example: Яндекс поиск
-                      search_engine_id:
-                        type: string
-                        example: 1234567890
-                  items:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        title:
-                          type: string
-                          example: Название страницы
-                        link:
-                          type: string
-                          example: полная ссылка на страницу
-                        snippet:
-                          type: string
-                          example: Краткое описание страницы
-                        display_link:
-                          type: string
-                          example: ссылка на страницу
-                        date:
-                          type: string
-                          format: date
-                          example: дата страницы
+          application/json:
+          schema:
+            type: object
+          properties:
+            context:
+            type: object
+          properties:
+            title:
+            type: string
+            example: Яндекс поиск
+          search_engine_id:
+            type: string
+            example: 1234567890
+          items:
+            type: array
+          items:
+            type: object
+          properties:
+            title:
+          type: string
+          example: Название страницы
+          link:
+            type: string
+          example: полная ссылка на страницу
+          snippet:
+            type: string
+          example: Краткое описание страницы
+          display_link:
+            type: string
+          example: ссылка на страницу
+          date:
+            type: string
+            format: date
+            example: дата страницы
       400:
           description: Ошибка запроса
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    example: |
+          schema:
+            type: object
+            properties:
+            error:
+            type: string
+            example: |
                       Возможные ошибки:
                       - Пустой поисковый запрос
                       - Некорректный формат параметра
@@ -115,13 +115,13 @@ paths:
        500:
           description: Внутренняя ошибка сервера
           content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    example: |
+          application/json:
+          schema:
+            type: object
+            properties:
+            error:
+            type: string
+            example: |
                       Возможные причины:
                       - Временная недоступность сервера
                       - Превышено время ожидания при обработке запроса
@@ -130,88 +130,88 @@ paths:
   
    /voice-to-text:
   post:
-      summary: Распознавание речи
-      description: Преобразует голосовой ввод в текст в режиме реального времени. Подходит для последующего использования в текстовом поиске
-      requestBody:
-        required: true
-        content:
+        summary: Распознавание речи
+          description: Преобразует голосовой ввод в текст в режиме реального времени. Подходит для последующего использования в текстовом поиске
+          requestBody:
+          required: true
+          content:
           application/json:
-            schema:
-              type: object
-              properties:
-                lang:
-                  type: string
-                  description: Язык речи
-                  example: "ru"
-                  enum: [en, ru]
-                audio_stream:
-                  type: string
-                  format: binary
-                  description: Голосовой ввод
-                  example: "Погода в Севастополе"
-      responses:
-        '200':
+          schema:
+            type: object
+            properties:
+            lang:
+            type: string
+          description: Язык речи
+          example: "ru"
+          enum: [en, ru]
+          audio_stream:
+            type: string
+            format: binary
+          description: Голосовой ввод
+          example: "Погода в Севастополе"
+    responses:
+        200:
           description: Успешное преобразование речи в текст
           content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  text:
-                    type: string
-                    description: Распознанный текст из голосового ввода
-                    example: "Погода в Севастополе"
-        '400':
+          application/json:
+          schema:
+            type: object
+            properties:
+            text:
+            type: string
+          description: Распознанный текст из голосового ввода
+            example: "Погода в Севастополе"
+        400:
           description: Неверные параметры запроса
-        '500':
+        500:
           description: Внутренняя ошибка сервера
   /image:
     post:
-      summary: Поиск среди изображений
-      description: возможность поиска похожих изображений на то, которое загрузил пользователь
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                image:
-                  type: string
-                  format: binary
-                  description: изображение для поиска похожих результатов
-                  example: "search_image.jpg"
-                lang:
-                  type: string
-                  description: язык результатов поиска
-                  example: "en"
-                  enum: [en, ru]
+        summary: Поиск среди изображений
+          description: возможность поиска похожих изображений на то, которое загрузил пользователь
+          requestBody:
+          required: true
+          content:
+          ultipart/form-data:
+          schema:
+            type: object
+            properties:
+            image:
+            type: string
+            format: binary
+          description: изображение для поиска похожих результатов
+            example: "search_image.jpg"
+            lang:
+            type: string
+          description: язык результатов поиска
+            example: "en"
+            enum: [en, ru]
       
 responses:
-        '200':
+        200:
           description: Успешные результаты поиска по изображению
           content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  results:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        title:
-                          type: string
-                          description: Заголовок результата.
-                        link:
-                          type: string
-                          format: uri
-                          description: URL результата.
-                        snippet:
-                          type: string
-                          description: Краткое описание результата.
-                        thumbnail:
-                          type: string
-                          format: uri
-                          description: URL миниатюры, связанной с результатом.
-                          example: "https://yandex.ru/photo.jpg"
+          application/json:
+            schema:
+              type: object
+          properties:
+          results:
+            type: array
+            items:
+            type: object
+            properties:
+            title:
+            type: string
+            description: Заголовок результата.
+            link:
+              type: string
+              format: uri
+            description: URL результата.
+              snippet:
+              type: string
+            description: Краткое описание результата.
+              umbnail:
+              type: string
+              format: uri
+            description: URL миниатюры, связанной с результатом.
+              example: "https://yandex.ru/photo.jpg"
