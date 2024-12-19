@@ -23,12 +23,12 @@ paths:
           required: false
           description: Максимальное количество возвращаемых результатов.
           schema: тип данных
-            type: integer
-            default: 10
+          type: integer
+          default: 10
         - in: query
             name: page
             required: false
-            description: Номер страницы (начиная с 1).
+            description: Номер страницы 
             schema:
               type: integer
               default: 1
@@ -51,15 +51,15 @@ paths:
             required: false
             description: Минимальная дата публикации результатов
             schema:
-              type: string
-              format: date
+            type: string
+            format: date
         - in: query
             name: to_date
             required: false
             description: Максимальная дата публикации результатов
             schema:
-              type: string
-              format: date    
+            type: string
+            format: date    
    responses:
         200:
           description: Успешный ответ
@@ -127,9 +127,7 @@ paths:
                       - Превышено время ожидания при обработке запроса
                       - Ошибка при интеграции с внутренними системамия
                       - Непредвиденная ошибка в логике обработки запросов
-   
-   
-   
+  
    /voice-to-text:
   post:
       summary: Распознавание речи
@@ -143,7 +141,7 @@ paths:
               properties:
                 lang:
                   type: string
-                  description: Язык речи.
+                  description: Язык речи
                   example: "ru"
                   enum: [en, ru]
                 audio_stream:
