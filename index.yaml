@@ -150,7 +150,7 @@ paths:
                   type: string
                   format: binary
                   description: Поток голосового ввода в режиме реального времени.
-                  example: "stream"
+                  example:
       responses:
         '200':
           description: Успешное преобразование речи в текст
@@ -162,7 +162,7 @@ paths:
                   text:
                     type: string
                     description: Распознанный текст из голосового ввода
-                    example: "Прогноз погоды в Севастополе"
+                    example:
         '400':
           description: Неверные параметры запроса
         '500':
