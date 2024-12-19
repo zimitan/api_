@@ -98,7 +98,7 @@ paths:
             type: string
             format: date
             example: дата страницы
-      400:
+        400:
           description: Ошибка запроса
           content:
             application/json:
@@ -112,7 +112,7 @@ paths:
                       - Пустой поисковый запрос
                       - Некорректный формат параметра
                       - Неподдерживаемый язык
-       500:
+        500:
           description: Внутренняя ошибка сервера
           content:
           application/json:
@@ -149,7 +149,7 @@ paths:
             format: binary
           description: Голосовой ввод
           example: "Погода в Севастополе"
-    responses:
+      responses:
         200:
           description: Успешное преобразование речи в текст
           content:
@@ -187,13 +187,13 @@ paths:
             example: "en"
             enum: [en, ru]
       
-responses:
+      responses:
         200:
           description: Успешные результаты поиска по изображению
           content:
           application/json:
             schema:
-              type: object
+            type: object
           properties:
           results:
             type: array
@@ -202,16 +202,16 @@ responses:
             properties:
             title:
             type: string
-            description: Заголовок результата.
+          description: Заголовок результата.
             link:
               type: string
               format: uri
-            description: URL результата.
+          description: URL результата.
               snippet:
               type: string
-            description: Краткое описание результата.
+          description: Краткое описание результата.
               umbnail:
               type: string
               format: uri
-            description: URL миниатюры, связанной с результатом.
+          description: URL миниатюры, связанной с результатом.
               example: "https://yandex.ru/photo.jpg"
