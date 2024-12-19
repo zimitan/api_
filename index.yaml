@@ -25,35 +25,35 @@ paths:
           schema: тип данных
             type: integer
             default: 10
-          - in: query
+        - in: query
             name: page
             required: false
             description: Номер страницы (начиная с 1).
             schema:
               type: integer
               default: 1
-          - in: query
+        - in: query
             name: per_page
             required: false
             description: Количество элементов на странице
             schema:
               type: integer
               default: 10
-          - in: query
+        - in: query
             name: language
             required: false
             description: Язык результатов поиска
             schema:
               type: string
               example: ru
-          - in: query
+        - in: query
             name: from_date
             required: false
             description: Минимальная дата публикации результатов
             schema:
               type: string
               format: date
-          - in: query
+        - in: query
             name: to_date
             required: false
             description: Максимальная дата публикации результатов
