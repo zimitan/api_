@@ -23,8 +23,8 @@ paths:
           required: false
           description: Максимальное количество возвращаемых результатов.
           schema: тип данных
-          type: integer
-          default: 10
+            type: integer
+            default: 10
         - in: query
             name: page
             required: false
@@ -51,15 +51,15 @@ paths:
             required: false
             description: Минимальная дата публикации результатов
             schema:
-            type: string
-            format: date
+              type: string
+              format: date
         - in: query
             name: to_date
             required: false
             description: Максимальная дата публикации результатов
             schema:
-            type: string
-            format: date    
+              type: string
+              format: date    
    responses:
         200:
           description: Успешный ответ
