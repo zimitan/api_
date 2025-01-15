@@ -1,217 +1,184 @@
 openapi: 3.0.0
 info:
   title: Yandex Search API
-  description: API для выполнения поисковых запросов через Яндекс
-  version: "1.0.0"
+  version: 1.2.0
+  description: API для выполнения поиска на платформе Яндекс, включая текстовый, голосовой поиск, загрузку файлов, а также поиск по фото.
 servers:
-  - url: https://api.test.com
-    description: Базовый URL для выполнения запросов
+  - url: https://api.yandex.ru/search/v1
+    description: Основной сервер API
+
 paths:
   /search:
     get:
-      summary: Выполнить поисковый запрос
-      description: Возвращает результаты поиска из Яндекса
+      summary: Текстовый поиск
+      description: Выполняет поиск по ключевым словам и возвращает текстовые результаты.
       parameters:
-        - in: query
-          name: строка поискового запроса
+        - name: query
+          in: query
           required: true
-          description: Поисковый запрос
+          description: Ключевые слова для поиска.
           schema:
             type: string
-        - in: query
-          name: limit
-          required: false
-          description: Максимальное количество возвращаемых результатов.
-          schema: 
-            type: integer
-            default: 10
-        - in: query
-          name: page
-          required: false
-          description: Номер страницы 
+        - name: language
+          in: query
+          description: Язык результатов поиска (например, ru, en).
+          schema:
+            type: string
+            default: ru
+        - name: region
+          in: query
+          description: Регион пользователя (например, Москва, Санкт-Петербург).
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Номер страницы для пагинации.
           schema:
             type: integer
             default: 1
-        - in: query
-          name: per_page
-          required: false
-          description: Количество элементов на странице
+        - name: limit
+          in: query
+          description: Количество результатов на странице.
           schema:
             type: integer
             default: 10
-        - in: query
-          name: language
-          required: false
-          description: Язык результатов поиска
-          schema:
-            type: string
-            example: ru
-        - in: query
-          name: from_date
-          required: false
-          description: Минимальная дата публикации результатов
-          schema:
-            type: string
-            format: date
-        - in: query
-          name: to_date
-          required: false
-          description: Максимальная дата публикации результатов
-          schema:
-            type: string
-            format: date    
-    responses:
-        200:
+      responses:
+        '200':
           description: Успешный ответ
           content:
-          application/json:
-          schema:
-            type: object
-          properties:
-            context:
-            type: object
-          properties:
-            title:
-            type: string
-            example: Яндекс поиск
-          search_engine_id:
-            type: string
-            example: 1234567890
-          items:
-            type: array
-          items:
-            type: object
-          properties:
-            title:
-          type: string
-          example: Название страницы
-          link:
-            type: string
-          example: полная ссылка на страницу
-          snippet:
-            type: string
-          example: Краткое описание страницы
-          display_link:
-            type: string
-          example: ссылка на страницу
-          date:
-            type: string
-            format: date
-            example: дата страницы
-        400:
-          description: Ошибка запроса
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                        link:
+                          type: string
+                        snippet:
+                          type: string
+                  totalResults:
+                    type: integer
+                  currentPage:
+                    type: integer
+        '400':
+          description: Неверный запрос
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /search-by-photo:
+    post:
+      summary: Поиск по фотографии
+      description: Загружает фотографию и возвращает результаты, связанные с изображением.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Загружаемая фотография.
+      responses:
+        '200':
+          description: Успешный ответ
           content:
             application/json:
-          schema:
-            type: object
-            properties:
-            error:
-            type: string
-            example: |
-                      Возможные ошибки:
-                      - Пустой поисковый запрос
-                      - Некорректный формат параметра
-                      - Неподдерживаемый язык
-        500:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                        link:
+                          type: string
+                        thumbnail:
+                          type: string
+        '400':
+          description: Неверный запрос
+        '500':
           description: Внутренняя ошибка сервера
-          content:
-          application/json:
-          schema:
-            type: object
-            properties:
-            error:
-            type: string
-            example: |
-                      Возможные причины:
-                      - Временная недоступность сервера
-                      - Превышено время ожидания при обработке запроса
-                      - Ошибка при интеграции с внутренними системамия
-                      - Непредвиденная ошибка в логике обработки запросов
-  
-   /voice-to-text:
-  post:
-        summary: Распознавание речи
-          description: Преобразует голосовой ввод в текст в режиме реального времени. Подходит для последующего использования в текстовом поиске
-          requestBody:
-          required: true
-          content:
-          application/json:
-          schema:
-            type: object
-            properties:
-            lang:
-            type: string
-          description: Язык речи
-          example: "ru"
-          enum: [en, ru]
-          audio_stream:
-            type: string
-            format: binary
-          description: Голосовой ввод
-          example: "Погода в Севастополе"
-      responses:
-        200:
-          description: Успешное преобразование речи в текст
-          content:
-          application/json:
-          schema:
-            type: object
-            properties:
-            text:
-            type: string
-          description: Распознанный текст из голосового ввода
-            example: "Погода в Севастополе"
-        400:
-          description: Неверные параметры запроса
-        500:
-          description: Внутренняя ошибка сервера
-  /image:
+
+  /search-by-file:
     post:
-        summary: Поиск среди изображений
-          description: возможность поиска похожих изображений на то, которое загрузил пользователь
-          requestBody:
-          required: true
-          content:
-          ultipart/form-data:
-          schema:
-            type: object
-            properties:
-            image:
-            type: string
-            format: binary
-          description: изображение для поиска похожих результатов
-            example: "search_image.jpg"
-            lang:
-            type: string
-          description: язык результатов поиска
-            example: "en"
-            enum: [en, ru]
-      
-      responses:
-        200:
-          description: Успешные результаты поиска по изображению
-          content:
-          application/json:
+      summary: Поиск по файлу
+      description: Загружает файл для анализа и выполняет поиск, основанный на содержимом файла.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
             schema:
-            type: object
-          properties:
-          results:
-            type: array
-            items:
-            type: object
-            properties:
-            title:
-            type: string
-          description: Заголовок результата.
-            link:
-              type: string
-              format: uri
-          description: URL результата.
-              snippet:
-              type: string
-          description: Краткое описание результата.
-              umbnail:
-              type: string
-              format: uri
-          description: URL миниатюры, связанной с результатом.
-              example: "https://yandex.ru/photo.jpg"
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Загружаемый файл (например, текстовый документ или PDF).
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                        link:
+                          type: string
+        '400':
+          description: Неверный запрос
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /voice-search:
+    post:
+      summary: Голосовой поиск
+      description: Загружает аудиофайл с голосовым запросом и выполняет поиск.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                audio:
+                  type: string
+                  format: binary
+                  description: Загружаемый аудиофайл с голосовым запросом.
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                        link:
+                          type: string
+        '400':
+          description: Неверный запрос
+        '500':
+          description: Внутренняя ошибка сервера
